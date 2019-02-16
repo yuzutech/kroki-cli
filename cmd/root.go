@@ -3,18 +3,15 @@ package cmd
 import (
 	"bufio"
 	"fmt"
-	"github.com/spf13/cobra"
-	"github.com/yuzutech/kroki-go"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
-)
 
-var gConfigFilePath string
-var gDiagramType string
-var gImageFormat string
+	"github.com/spf13/cobra"
+	"github.com/yuzutech/kroki-go"
+)
 
 var gVersion string
 var gCommit string
@@ -22,46 +19,56 @@ var gCommit string
 var client kroki.Client
 
 var RootCmd = &cobra.Command{
-	Use:           "kroki convert",
-	Short:         `Convert text diagram to image.
+	Use: "kroki convert",
+	Short: `Convert text diagram to image.
 By default, the output is written to a file with the basename of the source file and the appropriate extension.
 Example: kroki convert hello.dot`,
 }
 
 var convertCmd = &cobra.Command{
-	Use:           "convert file",
-	Short:         "Convert text diagram to image",
-	Args:          cobra.ExactArgs(1),
+	Use:   "convert file",
+	Short: "Convert text diagram to image",
+	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fileName := args[0]
+		diagramTypeFlag, err := cmd.Flags().GetString("type")
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		imageFormatFlag, err := cmd.Flags().GetString("format")
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 		if fileName == "-" {
 			reader := bufio.NewReader(os.Stdin)
-			text , err := ioutil.ReadAll(reader)
+			text, err := ioutil.ReadAll(reader)
 			if err != nil {
-				fmt.Println(err)
+				fmt.Fprintln(os.Stderr, err)
 				os.Exit(1)
 			}
-			if gDiagramType == "" {
+			if diagramTypeFlag == "" {
 				fmt.Println("You must specify the diagram type using --type flag")
 				os.Exit(1)
 			}
-			result, err := client.FromString(string(text[:]), kroki.Graphviz, kroki.ImageFormat(gImageFormat))
+			result, err := client.FromString(string(text[:]), kroki.Graphviz, kroki.ImageFormat(imageFormatFlag))
 			if err != nil {
-				fmt.Println(err)
+				fmt.Fprintln(os.Stderr, err)
 				os.Exit(1)
 			}
 			fmt.Println(result)
 		} else {
 			var diagramType kroki.GraphFormat
-			var imageFormat = kroki.ImageFormat(gImageFormat)
-			if gDiagramType == "" {
+			var imageFormat = kroki.ImageFormat(imageFormatFlag)
+			if diagramTypeFlag == "" {
 				diagramType = inferDiagramType(fileName)
 				if diagramType == "" {
 					fmt.Println("Unable to infer the diagram type, please specify the diagram type using --type flag")
 					os.Exit(1)
 				}
 			} else {
-				diagramType = kroki.GraphFormat(gDiagramType)
+				diagramType = kroki.GraphFormat(diagramTypeFlag)
 			}
 			result, err := client.FromFile(fileName, diagramType, imageFormat)
 			if err != nil {
@@ -97,10 +104,10 @@ func Execute(version, commit string) {
 }
 
 func init() {
-	convertCmd.PersistentFlags().StringVarP(&gConfigFilePath, "config", "c", "", "alternate config file [env KROKI_CONFIG]")
-	convertCmd.PersistentFlags().StringVarP(&gDiagramType, "type", "t", "", "diagram type [actdiag, blockdiag, c4plantuml, ditaa, dot, erd, graphviz, nomnoml, nwdiag, plantuml, seqdiag, svgbob, umlet] (default: infer from file extension)")
-	convertCmd.PersistentFlags().StringVarP(&gImageFormat, "format", "f", string(kroki.Svg), "output format (default: svg)")
-	convertCmd.PersistentFlags().StringVarP(&gImageFormat, "out-file", "o", "", "output file (default: based on path of input file); use - to output to STDOUT")
+	convertCmd.PersistentFlags().StringP( "config", "c", "", "alternate config file [env KROKI_CONFIG]")
+	convertCmd.PersistentFlags().StringP( "type", "t", "", "diagram type [actdiag, blockdiag, c4plantuml, ditaa, dot, erd, graphviz, nomnoml, nwdiag, plantuml, seqdiag, svgbob, umlet] (default: infer from file extension)")
+	convertCmd.PersistentFlags().StringP( "format", "f", string(kroki.Svg), "output format (default: svg)")
+	convertCmd.PersistentFlags().StringP( "out-file", "o", "", "output file (default: based on path of input file); use - to output to STDOUT")
 
 	RootCmd.AddCommand(versionCmd)
 	RootCmd.AddCommand(convertCmd)
@@ -110,7 +117,7 @@ func init() {
 
 func outputFilePath(fileName string, imageFormat kroki.ImageFormat) string {
 	fileExtension := filepath.Ext(fileName)
-	return strings.Replace(fileName, fileExtension, "." + string(imageFormat), 1)
+	return strings.Replace(fileName, fileExtension, "."+string(imageFormat), 1)
 }
 
 func inferDiagramType(fileName string) kroki.GraphFormat {
