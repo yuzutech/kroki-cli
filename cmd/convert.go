@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/pkg/errors"
+	"io"
 	"io/ioutil"
 	"os"
 	"path"
@@ -26,13 +27,29 @@ func Convert(cmd *cobra.Command, args []string) {
 	}
 	outFile, err := cmd.Flags().GetString("out-file")
 	if filePath == "-" {
-		ConvertFromStdin(graphFormat, imageFormat, outFile)
+		writer, err := GetWriter(filePath, outFile)
+		if err != nil {
+			exit(err)
+		}
+		ConvertFromStdin(graphFormat, imageFormat, outFile, writer)
 	} else {
 		ConvertFromFile(filePath, graphFormat, imageFormat, outFile)
 	}
 }
 
-func ConvertFromStdin(diagramTypeRaw string, imageFormatRaw string, outFile string) {
+func GetWriter(filePath string, outFile string) (io.Writer, error) {
+	if outFile == "" || outFile == "-" {
+		return os.Stdout, nil
+	}
+	file, err := os.Create(filePath)
+	if err != nil {
+		return nil, errors.Wrapf(err, "fail to create file '%s'", filePath)
+	}
+	defer file.Close()
+	return file, nil
+}
+
+func ConvertFromStdin(diagramTypeRaw string, imageFormatRaw string, outFile string, writer io.Writer) {
 	if diagramTypeRaw == "" {
 		exit("diagram type must be specify using --type flag")
 	}
@@ -52,13 +69,9 @@ func ConvertFromStdin(diagramTypeRaw string, imageFormatRaw string, outFile stri
 	if err != nil {
 		exit(err)
 	}
-	if outFile == "" || outFile == "-" {
-		fmt.Println(result)
-	} else {
-		err = client.WriteToFile(outFile, result)
-		if err != nil {
-			exit(err)
-		}
+	_, err = writer.Write([]byte(result))
+	if err != nil {
+		exit(err)
 	}
 }
 

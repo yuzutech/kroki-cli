@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"bytes"
+	"fmt"
+	"os"
 	"testing"
 
 	"github.com/yuzutech/kroki-go"
@@ -105,4 +108,11 @@ func TestResolveImageFormat(t *testing.T) {
 			t.Errorf("ResolveImageFormat error\nexpected: %s\nactual:   %s", c.expected, result)
 		}
 	}
+}
+
+func TestConvertFromStdin(t *testing.T) {
+	os.Stdin.Write([]byte("digraph G {Hello->World}"))
+	buf := bytes.NewBuffer([]byte(""))
+	ConvertFromStdin("dot", "svg", "out.svg", buf)
+	fmt.Println(buf.String())
 }
