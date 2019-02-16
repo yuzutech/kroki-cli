@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/yuzutech/kroki-cli/cmd"
+	"kroki/cmd"
 )
 
 var (
