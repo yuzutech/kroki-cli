@@ -9,24 +9,24 @@ import (
 func TestOutputFilePath(t *testing.T) {
 
 	cases := []struct {
-		filePath   string
+		filePath    string
 		imageFormat kroki.ImageFormat
-		expected string
+		expected    string
 	}{
 		{
-			filePath:   "/path/to/hello.dot",
+			filePath:    "/path/to/hello.dot",
 			imageFormat: kroki.Svg,
-			expected: "/path/to/hello.svg",
+			expected:    "/path/to/hello.svg",
 		},
 		{
-			filePath:   "/path/dot/hello.dot",
+			filePath:    "/path/dot/hello.dot",
 			imageFormat: kroki.Svg,
-			expected: "/path/dot/hello.svg",
+			expected:    "/path/dot/hello.svg",
 		},
 		{
-			filePath:   "hello.dot.puml",
+			filePath:    "hello.dot.puml",
 			imageFormat: kroki.ImageFormat("png"),
-			expected: "hello.dot.png",
+			expected:    "hello.dot.png",
 		},
 	}
 	for _, c := range cases {
