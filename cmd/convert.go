@@ -24,26 +24,42 @@ func Convert(cmd *cobra.Command, args []string) {
 	if err != nil {
 		exit(err)
 	}
+	outFile, err := cmd.Flags().GetString("out-file")
 	if filePath == "-" {
-		ConvertFromStdin(graphFormat, imageFormat)
+		ConvertFromStdin(graphFormat, imageFormat, outFile)
 	} else {
-		ConvertFromFile(filePath, graphFormat, imageFormat)
+		ConvertFromFile(filePath, graphFormat, imageFormat, outFile)
 	}
 }
 
-func ConvertFromStdin(diagramType string, imageFormat string) {
-	if diagramType == "" {
+func ConvertFromStdin(diagramTypeRaw string, imageFormatRaw string, outFile string) {
+	if diagramTypeRaw == "" {
 		exit("diagram type must be specify using --type flag")
+	}
+	diagramType, err := GraphFormatFromValue(diagramTypeRaw)
+	if err != nil {
+		exit(err)
+	}
+	imageFormat, err := ResolveImageFormat(imageFormatRaw, outFile)
+	if err != nil {
+		exit(err)
 	}
 	text, err := GetTextFromStdin()
 	if err != nil {
 		exit(err)
 	}
-	result, err := client.FromString(text, kroki.Graphviz, kroki.ImageFormat(imageFormat))
+	result, err := client.FromString(text, diagramType, imageFormat)
 	if err != nil {
 		exit(err)
 	}
-	fmt.Println(result)
+	if outFile == "" || outFile == "-" {
+		fmt.Println(result)
+	} else {
+		err = client.WriteToFile(outFile, result)
+		if err != nil {
+			exit(err)
+		}
+	}
 }
 
 func GetTextFromStdin() (result string, err error) {
@@ -52,12 +68,12 @@ func GetTextFromStdin() (result string, err error) {
 	return string(input), err
 }
 
-func ConvertFromFile(filePath string, graphFormatRaw string, imageFormatRaw string) {
+func ConvertFromFile(filePath string, graphFormatRaw string, imageFormatRaw string, outFile string) {
 	graphFormat, err := ResolveGraphFormat(graphFormatRaw, filePath)
 	if err != nil {
 		exit(err)
 	}
-	imageFormat, err := ResolveImageFormat(imageFormatRaw)
+	imageFormat, err := ResolveImageFormat(imageFormatRaw, outFile)
 	if err != nil {
 		exit(err)
 	}
@@ -65,18 +81,35 @@ func ConvertFromFile(filePath string, graphFormatRaw string, imageFormatRaw stri
 	if err != nil {
 		exit(err)
 	}
-	err = client.WriteToFile(OutputFilePath(filePath, imageFormat), result)
-	if err != nil {
-		exit(err)
+	if outFile == "-" {
+		fmt.Println(result)
+	} else {
+		err = client.WriteToFile(ResolveOutputFilePath(outFile, filePath, imageFormat), result)
+		if err != nil {
+			exit(err)
+		}
 	}
 }
 
-func OutputFilePath(filePath string, imageFormat kroki.ImageFormat) string {
+func ResolveOutputFilePath(outFile string, filePath string, imageFormat kroki.ImageFormat) string {
+	if outFile != "" {
+		return outFile
+	}
 	fileExtension := path.Ext(filePath)
 	return filePath[0:len(filePath)-len(fileExtension)] + "." + string(imageFormat)
 }
 
-func ResolveImageFormat(imageFormatRaw string) (result kroki.ImageFormat, err error) {
+func ResolveImageFormat(imageFormatRaw string, outFile string) (kroki.ImageFormat, error) {
+	if imageFormatRaw == "" {
+		if  outFile == "" || outFile == "-" {
+			return kroki.Svg, nil
+		}
+		return ImageFormatFromFile(outFile)
+	}
+	return ImageFormatFromValue(imageFormatRaw)
+}
+
+func ImageFormatFromValue(imageFormatRaw string) (kroki.ImageFormat, error) {
 	value := strings.ToLower(imageFormatRaw)
 	switch value {
 	case "svg":
@@ -94,7 +127,26 @@ func ResolveImageFormat(imageFormatRaw string) (result kroki.ImageFormat, err er
 	}
 }
 
-func ResolveGraphFormat(graphFormatRaw string, filePath string) (result kroki.GraphFormat, err error) {
+func ImageFormatFromFile(filePath string) (kroki.ImageFormat, error) {
+	fileExtension := filepath.Ext(filePath)
+	value := strings.ToLower(fileExtension)
+	switch value {
+	case ".svg":
+		return kroki.Svg, nil
+	case ".png":
+		return kroki.ImageFormat("png"), nil
+	case ".jpeg", ".jpg":
+		return kroki.ImageFormat("jpeg"), nil
+	case ".pdf":
+		return kroki.ImageFormat("pdf"), nil
+	default:
+		return kroki.ImageFormat(""), errors.Errorf(
+			"invalid image format %s.",
+			value)
+	}
+}
+
+func ResolveGraphFormat(graphFormatRaw string, filePath string) (kroki.GraphFormat, error) {
 	if graphFormatRaw == "" {
 		return GraphFormatFromFile(filePath)
 	} else {
@@ -102,7 +154,7 @@ func ResolveGraphFormat(graphFormatRaw string, filePath string) (result kroki.Gr
 	}
 }
 
-func GraphFormatFromValue(value string) (result kroki.GraphFormat, err error) {
+func GraphFormatFromValue(value string) (kroki.GraphFormat, error) {
 	value = strings.ToLower(value)
 	switch value {
 	case "dot", "graphviz":
@@ -138,7 +190,7 @@ func GraphFormatFromValue(value string) (result kroki.GraphFormat, err error) {
 	}
 }
 
-func GraphFormatFromFile(filePath string) (result kroki.GraphFormat, err error) {
+func GraphFormatFromFile(filePath string) (kroki.GraphFormat, error) {
 	fileExtension := filepath.Ext(filePath)
 	value := strings.ToLower(fileExtension)
 	switch value {

@@ -48,7 +48,7 @@ func Execute(version, commit string) {
 func init() {
 	convertCmd.PersistentFlags().StringP("config", "c", "", "alternate config file [env KROKI_CONFIG]")
 	convertCmd.PersistentFlags().StringP("type", "t", "", "diagram type [actdiag, blockdiag, c4plantuml, ditaa, dot, erd, graphviz, nomnoml, nwdiag, plantuml, seqdiag, svgbob, umlet] (default: infer from file extension)")
-	convertCmd.PersistentFlags().StringP("format", "f", string(kroki.Svg), "output format (default: svg)")
+	convertCmd.PersistentFlags().StringP("format", "f", "", "output format (default: infer from output file extension otherwise svg)")
 	convertCmd.PersistentFlags().StringP("out-file", "o", "", "output file (default: based on path of input file); use - to output to STDOUT")
 
 	RootCmd.AddCommand(versionCmd)
