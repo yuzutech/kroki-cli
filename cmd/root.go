@@ -97,10 +97,10 @@ func Execute(version, commit string) {
 }
 
 func init() {
-	convertCmd.PersistentFlags().StringVarP(&gConfigFilePath, "config", "c", "", "specify an alternate config file [env KROKI_CONFIG]")
-	convertCmd.PersistentFlags().StringVarP(&gDiagramType, "type", "t", "", "specify the diagram type [actdiag, blockdiag, c4plantuml, ditaa, dot, erd, graphviz, nomnoml, nwdiag, plantuml, seqdiag, svgbob, umlet] (default: infer from file extension)")
-	convertCmd.PersistentFlags().StringVarP(&gImageFormat, "format", "f", string(kroki.Svg), "specify the output format (default: svg)")
-	// -o, --out-file FILE              output file (default: based on path of input file); use - to output to STDOUT
+	convertCmd.PersistentFlags().StringVarP(&gConfigFilePath, "config", "c", "", "alternate config file [env KROKI_CONFIG]")
+	convertCmd.PersistentFlags().StringVarP(&gDiagramType, "type", "t", "", "diagram type [actdiag, blockdiag, c4plantuml, ditaa, dot, erd, graphviz, nomnoml, nwdiag, plantuml, seqdiag, svgbob, umlet] (default: infer from file extension)")
+	convertCmd.PersistentFlags().StringVarP(&gImageFormat, "format", "f", string(kroki.Svg), "output format (default: svg)")
+	convertCmd.PersistentFlags().StringVarP(&gImageFormat, "out-file", "o", "", "output file (default: based on path of input file); use - to output to STDOUT")
 
 	RootCmd.AddCommand(versionCmd)
 	RootCmd.AddCommand(convertCmd)
