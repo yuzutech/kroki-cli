@@ -101,7 +101,7 @@ func ResolveOutputFilePath(outFile string, filePath string, imageFormat kroki.Im
 
 func ResolveImageFormat(imageFormatRaw string, outFile string) (kroki.ImageFormat, error) {
 	if imageFormatRaw == "" {
-		if  outFile == "" || outFile == "-" {
+		if outFile == "" || outFile == "-" {
 			return kroki.Svg, nil
 		}
 		return ImageFormatFromFile(outFile)
@@ -175,7 +175,7 @@ func GraphFormatFromValue(value string) (kroki.GraphFormat, error) {
 		return kroki.C4plantuml, nil
 	case "seqdiag":
 		return kroki.SeqDiag, nil
-	case "erd":
+	case "erd", "er":
 		return kroki.GraphFormat("erd"), nil
 	case "nwdiag":
 		return kroki.GraphFormat("nwdiag"), nil
@@ -212,7 +212,7 @@ func GraphFormatFromFile(filePath string) (kroki.GraphFormat, error) {
 		return kroki.C4plantuml, nil
 	case ".seqdiag":
 		return kroki.SeqDiag, nil
-	case ".erd":
+	case ".erd", ".er":
 		return kroki.GraphFormat("erd"), nil
 	case ".nwdiag":
 		return kroki.GraphFormat("nwdiag"), nil
