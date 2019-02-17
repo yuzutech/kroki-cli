@@ -2,16 +2,12 @@ package cmd
 
 import (
 	"fmt"
-	"time"
-
 	"github.com/spf13/cobra"
-	"github.com/yuzutech/kroki-go"
+	"github.com/spf13/viper"
 )
 
 var gVersion string
 var gCommit string
-
-var client kroki.Client
 
 var RootCmd = &cobra.Command{
 	Use: "kroki convert",
@@ -50,16 +46,22 @@ func init() {
 	convertCmd.PersistentFlags().StringP("type", "t", "", "diagram type [actdiag, blockdiag, c4plantuml, ditaa, dot, erd, graphviz, nomnoml, nwdiag, plantuml, seqdiag, svgbob, umlet] (default: infer from file extension)")
 	convertCmd.PersistentFlags().StringP("format", "f", "", "output format (default: infer from output file extension otherwise svg)")
 	convertCmd.PersistentFlags().StringP("out-file", "o", "", "output file (default: based on path of input file); use - to output to STDOUT")
+	viper.SetDefault("endpoint", "https://demo.kroki.io")
+	viper.SetDefault("timeout", "20s")
+	viper.SetConfigName(".kroki")
+	viper.AddConfigPath("/etc/kroki/")
+	viper.AddConfigPath("$HOME")
+	viper.AddConfigPath(".")
+	viper.SetEnvPrefix("kroki")
+	viper.BindEnv("endpoint")
+	viper.BindEnv("timeout")
 
 	RootCmd.AddCommand(versionCmd)
 	RootCmd.AddCommand(convertCmd)
 
-	cobra.OnInitialize(buildClient)
+	cobra.OnInitialize(initConfig)
 }
 
-func buildClient() {
-	client = kroki.New(kroki.Configuration{
-		URL:     "https://demo.kroki.io",
-		Timeout: time.Second * 20,
-	})
+func initConfig() {
+	viper.ReadInConfig() // ignore error
 }

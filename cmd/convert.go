@@ -3,14 +3,15 @@ package cmd
 import (
 	"bufio"
 	"fmt"
-	"github.com/pkg/errors"
 	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
 
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"github.com/yuzutech/kroki-go"
 )
 
@@ -25,14 +26,18 @@ func Convert(cmd *cobra.Command, args []string) {
 		exit(err)
 	}
 	outFile, err := cmd.Flags().GetString("out-file")
+	if err != nil {
+		exit(err)
+	}
+	client := GetClient(cmd)
 	if filePath == "-" {
-		ConvertFromStdin(graphFormat, imageFormat, outFile)
+		ConvertFromStdin(client, graphFormat, imageFormat, outFile)
 	} else {
-		ConvertFromFile(filePath, graphFormat, imageFormat, outFile)
+		ConvertFromFile(client, filePath, graphFormat, imageFormat, outFile)
 	}
 }
 
-func ConvertFromStdin(diagramTypeRaw string, imageFormatRaw string, outFile string) {
+func ConvertFromStdin(client kroki.Client, diagramTypeRaw string, imageFormatRaw string, outFile string) {
 	if diagramTypeRaw == "" {
 		exit("diagram type must be specify using --type flag")
 	}
@@ -68,7 +73,7 @@ func GetTextFromStdin() (result string, err error) {
 	return string(input), err
 }
 
-func ConvertFromFile(filePath string, graphFormatRaw string, imageFormatRaw string, outFile string) {
+func ConvertFromFile(client kroki.Client, filePath string, graphFormatRaw string, imageFormatRaw string, outFile string) {
 	graphFormat, err := ResolveGraphFormat(graphFormatRaw, filePath)
 	if err != nil {
 		exit(err)
@@ -225,4 +230,25 @@ func GraphFormatFromFile(filePath string) (kroki.GraphFormat, error) {
 			"unable to infer the graph format from the file extension %s, please specify the diagram type using --type flag.",
 			value)
 	}
+}
+
+func GetClient(cmd *cobra.Command) kroki.Client {
+	configFilePath, err := cmd.Flags().GetString("config")
+	if err != nil {
+		exit(err)
+	}
+	if configFilePath != "" {
+		file, err := os.Open(configFilePath)
+		if err != nil {
+			exit(err)
+		}
+		err = viper.ReadConfig(file)
+		if err != nil {
+			exit(err)
+		}
+	}
+	return kroki.New(kroki.Configuration{
+		URL:     viper.GetString("endpoint"),
+		Timeout: viper.GetDuration("timeout"),
+	})
 }

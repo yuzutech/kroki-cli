@@ -58,8 +58,8 @@ Example:
 
 ..kroki.yml
 ```yml
-endpoint: 'https://localhost:8000
-timeout: 30
+endpoint: 'https://localhost:8000'
+timeout: 30s
 ```
 
 If you don't want to use a file you can also use the following environment variables:
@@ -69,4 +69,4 @@ If you don't want to use a file you can also use the following environment varia
 
 []
 
- KROKI_ENDPOINT=https://localhost:8000 KROKI_TIMEOUT=30 kroki convert hello.dot
+ KROKI_ENDPOINT=https://localhost:8000 KROKI_TIMEOUT=1m kroki convert hello.dot
