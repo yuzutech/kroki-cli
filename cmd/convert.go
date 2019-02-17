@@ -3,6 +3,7 @@ package cmd
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"path"
@@ -31,13 +32,14 @@ func Convert(cmd *cobra.Command, args []string) {
 	}
 	client := GetClient(cmd)
 	if filePath == "-" {
-		ConvertFromStdin(client, graphFormat, imageFormat, outFile)
+		reader := bufio.NewReader(os.Stdin)
+		ConvertFromReader(client, graphFormat, imageFormat, outFile, reader)
 	} else {
 		ConvertFromFile(client, filePath, graphFormat, imageFormat, outFile)
 	}
 }
 
-func ConvertFromStdin(client kroki.Client, diagramTypeRaw string, imageFormatRaw string, outFile string) {
+func ConvertFromReader(client kroki.Client, diagramTypeRaw string, imageFormatRaw string, outFile string, reader io.Reader) {
 	if diagramTypeRaw == "" {
 		exit("diagram type must be specify using --type flag")
 	}
@@ -49,7 +51,7 @@ func ConvertFromStdin(client kroki.Client, diagramTypeRaw string, imageFormatRaw
 	if err != nil {
 		exit(err)
 	}
-	text, err := GetTextFromStdin()
+	text, err := GetTextFromReader(reader)
 	if err != nil {
 		exit(err)
 	}
@@ -67,8 +69,7 @@ func ConvertFromStdin(client kroki.Client, diagramTypeRaw string, imageFormatRaw
 	}
 }
 
-func GetTextFromStdin() (result string, err error) {
-	reader := bufio.NewReader(os.Stdin)
+func GetTextFromReader(reader io.Reader) (result string, err error) {
 	input, err := ioutil.ReadAll(reader)
 	return string(input), err
 }
