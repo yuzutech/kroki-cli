@@ -1,0 +1,68 @@
+= Kroki CLI
+
+image:https://travis-ci.org/yuzutech/kroki-cli.svg?branch=master[Build Status,link=https://travis-ci.org/yuzutech/kroki-cli]
+
+A CLI for https://kroki.io.
+
+== Usage
+
+ kroki convert hello.dot
+
+By default the diagram type will be inferred from the diagram file extension and the default output format will be `SVG`.
+
+Long format:
+
+ kroki convert hello.dot --type dot --format svg
+
+The output format can also be inferred from the output file using the `--out-file` flag:
+
+ kroki convert simple.er --out-file out.png
+
+Read from `stdin`:
+
+ cat hello.dot | kroki convert - -t dot
+
+By default when reading from `stdin` using `-`, the result will be output to `stdout`.
+If you want to output to a file you can use `-o`:
+
+ cat hello.dot | kroki convert - -t dot -o out.png
+
+Similarly, you can also output to `stdout` when reading from a file using the special value `-` with the `--out-file` flag:
+
+ kroki convert simple.er --out-file -
+
+== Configuration
+
+To configure the endpoint, you can use a configuration file.
+The CLI will look for the following locations:
+
+* `/etc/kroki.yml`
+* `$HOME/kroki.yml`
+* `kroki.yml`
+
+You can also specify an alternate config file using the `--config` flag:
+
+ kroki convert hello.dot --config config.yml
+
+The config file should contain the endpoint URL and the HTTP timeout.
+By default Kroki will use the demonstration server: https://demo.kroki.io and a timeout of 20 seconds.
+
+CAUTION: Please note that the demonstration server usage is restricted to reasonable, non-commercial use-cases.
+We provide no guarantee regarding uptime or latency.
+
+Example:
+
+.kroki.yml
+```yml
+endpoint: 'https://localhost:8000'
+timeout: 30s
+```
+
+If you don't want to use a file you can also use the following environment variables:
+
+* `KROKI_ENDPOINT`
+* `KROKI_TIMEOUT`
+
+[]
+
+ KROKI_ENDPOINT=https://localhost:8000 KROKI_TIMEOUT=1m kroki convert hello.dot
