@@ -8,10 +8,10 @@ func SetupConfig() {
 	viper.SetDefault("timeout", "20s")
 
 	// Config file name
-	viper.SetConfigName(".kroki")
+	viper.SetConfigName("kroki")
 
 	// Default config paths
-	viper.AddConfigPath("/etc/kroki/")
+	viper.AddConfigPath("/etc")
 	viper.AddConfigPath("$HOME")
 	viper.AddConfigPath(".")
 

@@ -36,9 +36,9 @@ Similarly, you can also output to `stdout` when reading from a file using the sp
 To configure the endpoint, you can use a configuration file.
 The CLI will look for the following locations:
 
-* `/etc/kroki/config.yml`
-* `$HOME/.kroki.yml`
-* `.kroki.yml`
+* `/etc/kroki.yml`
+* `$HOME/kroki.yml`
+* `kroki.yml`
 
 You can also specify an alternate config file using the `--config` flag:
 
@@ -52,7 +52,7 @@ We provide no guarantee regarding uptime or latency.
 
 Example:
 
-..kroki.yml
+.kroki.yml
 ```yml
 endpoint: 'https://localhost:8000'
 timeout: 30s
