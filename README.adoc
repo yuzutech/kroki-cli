@@ -27,14 +27,11 @@ If you want to output to a file you can use `-o`:
 
  cat hello.dot | kroki convert - -t dot -o out.png
 
-
 Similarly, you can also output to `stdout` when reading from a file using the special value `-` with the `--out-file` flag:
 
  kroki convert simple.er --out-file -
 
-
 == Configuration
-
 
 To configure the endpoint, you can use a configuration file.
 The CLI will look for the following locations:
@@ -44,7 +41,6 @@ The CLI will look for the following locations:
 * `.kroki.yml`
 
 You can also specify an alternate config file using the `--config` flag:
-
 
  kroki convert hello.dot --config config.yml
 
