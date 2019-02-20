@@ -28,13 +28,13 @@ func TestResolveOutputFilePath(t *testing.T) {
 		{
 			filePath:    "/path/to/hello.dot",
 			outFile:     "",
-			imageFormat: kroki.Svg,
+			imageFormat: kroki.SVG,
 			expected:    "/path/to/hello.svg",
 		},
 		{
 			filePath:    "/path/dot/hello.dot",
 			outFile:     "",
-			imageFormat: kroki.Svg,
+			imageFormat: kroki.SVG,
 			expected:    "/path/dot/hello.svg",
 		},
 		{
@@ -68,17 +68,17 @@ func TestResolveImageFormat(t *testing.T) {
 		{
 			imageFormatRaw: "",
 			outFile:        "",
-			expected:       kroki.Svg, // default value
+			expected:       kroki.SVG, // default value
 		},
 		{
 			imageFormatRaw: "SVG",
 			outFile:        "",
-			expected:       kroki.Svg,
+			expected:       kroki.SVG,
 		},
 		{
 			imageFormatRaw: "SVG",
 			outFile:        "out.png",
-			expected:       kroki.Svg, // --format flag has priority over output file extension
+			expected:       kroki.SVG, // --format flag has priority over output file extension
 		},
 		{
 			imageFormatRaw: "PNG",
