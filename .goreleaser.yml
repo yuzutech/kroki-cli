@@ -5,9 +5,10 @@ before:
     - go mod download
 
 builds:
-  - env:
+  -
+    env:
       - CGO_ENABLED=0
-  - binary: kroki
+    binary: kroki
     goos:
       - windows
       - darwin
