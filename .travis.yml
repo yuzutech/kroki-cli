@@ -11,5 +11,23 @@ install:
 - go mod vendor
 
 script:
-- go test -race ./...
-- golangci-lint run .
+- make test
+- make lint
+
+jobs:
+  include:
+    - stage: goreleaser-snapshot
+      go: "1.11.x"
+      script:
+        - curl -sL https://git.io/goreleaser | head -n -2 | bash
+        - tar -xf /tmp/goreleaser.tar.gz -C $GOPATH/bin
+        - goreleaser --snapshot --skip-sign
+    - stage: goreleaser-release
+      go: "1.11.x"
+      if: |
+        repo = 'yuzutech/kroki-cli' AND \
+        tag IS present
+      script:
+        - curl -sL https://git.io/goreleaser | head -n -2 | bash
+        - tar -xf /tmp/goreleaser.tar.gz -C $GOPATH/bin
+        - goreleaser --skip-sign

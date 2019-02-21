@@ -1,0 +1,28 @@
+project_name: kroki-cli
+
+before:
+  hooks:
+    - go mod download
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+  - binary: kroki
+    goos:
+      - windows
+      - darwin
+      - linux
+      - openbsd
+    goarch:
+      - amd64
+
+archive:
+  format_overrides:
+    - goos: windows
+      format: zip
+
+release:
+  github:
+    owner: yuzutech
+    name: kroki-cli
+  draft: true
