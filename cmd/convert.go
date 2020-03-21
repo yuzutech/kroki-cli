@@ -191,6 +191,16 @@ func GraphFormatFromValue(value string) (kroki.DiagramType, error) {
 		return kroki.ActDiag, nil
 	case "ditaa":
 		return kroki.Ditaa, nil
+	case "rackdiag":
+		return kroki.RackDiag, nil
+	case "packetdiag":
+		return kroki.PacketDiag, nil
+	case "vega":
+		return kroki.Vega, nil
+	case "vegalite":
+		return kroki.VegaLite, nil
+	case "wavedrom":
+		return kroki.WaveDrom, nil
 	default:
 		return kroki.DiagramType(""), errors.Errorf(
 			"invalid graph format %s.",
@@ -228,6 +238,16 @@ func GraphFormatFromFile(filePath string) (kroki.DiagramType, error) {
 		return kroki.ActDiag, nil
 	case ".ditaa":
 		return kroki.Ditaa, nil
+	case ".rackdiag":
+		return kroki.RackDiag, nil
+	case ".packetdiag":
+		return kroki.PacketDiag, nil
+	case ".vega", ".vg":
+		return kroki.Vega, nil
+	case ".vegalite", ".vgl", ".vl":
+		return kroki.VegaLite, nil
+	case "wavedrom":
+		return kroki.WaveDrom, nil
 	default:
 		return kroki.DiagramType(""), errors.Errorf(
 			"unable to infer the graph format from the file extension %s, please specify the diagram type using --type flag.",

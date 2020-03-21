@@ -59,6 +59,49 @@ func TestResolveOutputFilePath(t *testing.T) {
 	}
 }
 
+func TestGraphFormatFromFile(t *testing.T) {
+	cases := []struct {
+		filePath    string
+		expected    kroki.DiagramType
+	}{
+		{
+			filePath:    "/path/to/hello.dot",
+			expected:    kroki.GraphViz,
+		},
+		{
+			filePath:    "/path/to/hello.puml",
+			expected:    kroki.PlantUML,
+		},
+		{
+			filePath:    "/path/to/hello.plantuml",
+			expected:    kroki.PlantUML,
+		},
+		{
+			filePath:    "/path/to/hello.vega",
+			expected:    kroki.Vega,
+		},
+		{
+			filePath:    "/path/to/hello.vg",
+			expected:    kroki.Vega,
+		},
+		{
+			filePath:    "hello.vl",
+			expected:    kroki.VegaLite,
+		},
+		{
+			filePath:    "hello.c4",
+			expected:    kroki.C4PlantUML,
+		},
+	}
+	for _, c := range cases {
+
+		result, _ := GraphFormatFromFile(c.filePath)
+		if result != c.expected {
+			t.Errorf("GraphFormatFromFile error\nexpected: %s\nactual:   %s", c.expected, result)
+		}
+	}
+}
+
 func TestResolveImageFormat(t *testing.T) {
 	cases := []struct {
 		imageFormatRaw string
