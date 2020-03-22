@@ -35,12 +35,12 @@ github.com/ugorji/go/codec v0.0.0-20181204163529-d75b2dcb6bc8/go.mod h1:VFNgLljT
 github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:aYKd//L2LvnjZzWKhF00oedf4jCCReLcmhLdhm1A27Q=
 github.com/yuzutech/kroki-go v0.1.0 h1:fuQTmYDpZM1LMIxp9NVuL69a823aef9lAuCQ17IUkpU=
 github.com/yuzutech/kroki-go v0.1.0/go.mod h1:75GoPIdAFlGbVkHdyNhF5qHlf3uT0jWpBIFuCVz8omY=
-github.com/yuzutech/kroki-go v0.1.1-0.20190219183547-bfe91c3e23c2 h1:1Vzhq5g76xAazH/2CSoE7GfVxSl28/+9rnkqMA8VqsQ=
-github.com/yuzutech/kroki-go v0.1.1-0.20190219183547-bfe91c3e23c2/go.mod h1:Cys0gjXdlViePdrZ4AKMUyX4yVIAoIhMBhvpYPJahrk=
 github.com/yuzutech/kroki-go v0.2.0 h1:BZ7CMkepyJ4JGUrO43GRRKTCMnAOc0eFceZBrPm6zuQ=
 github.com/yuzutech/kroki-go v0.2.0/go.mod h1:Cys0gjXdlViePdrZ4AKMUyX4yVIAoIhMBhvpYPJahrk=
 github.com/yuzutech/kroki-go v0.3.0 h1:GIQv3jVQF8GNl6k+el55pksFeV7mJ9dQr9wPjyNj6nI=
 github.com/yuzutech/kroki-go v0.3.0/go.mod h1:Cys0gjXdlViePdrZ4AKMUyX4yVIAoIhMBhvpYPJahrk=
+github.com/yuzutech/kroki-go v0.4.0 h1:2w2Vxd7yleXB29vZUL7UVZ2RFL3UfTgYwd4I6poNMIM=
+github.com/yuzutech/kroki-go v0.4.0/go.mod h1:Cys0gjXdlViePdrZ4AKMUyX4yVIAoIhMBhvpYPJahrk=
 golang.org/x/crypto v0.0.0-20181203042331-505ab145d0a9/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=
 golang.org/x/sys v0.0.0-20181205085412-a5c9d58dba9a h1:1n5lsVfiQW3yfsRGu98756EH1YthsFqr/5mxHduZW2A=
 golang.org/x/sys v0.0.0-20181205085412-a5c9d58dba9a/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=

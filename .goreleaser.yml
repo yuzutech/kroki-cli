@@ -17,10 +17,11 @@ builds:
     goarch:
       - amd64
 
-archive:
-  format_overrides:
-    - goos: windows
-      format: zip
+archives:
+  -
+    format_overrides:
+      - goos: windows
+        format: zip
 
 release:
   github:
