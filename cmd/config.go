@@ -29,5 +29,5 @@ func SetupConfig() {
 
 
 func InitDefaultConfig() {
-	viper.ReadInConfig() // ignore error
+	_ = viper.ReadInConfig() // ignore error
 }

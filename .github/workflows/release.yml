@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v2.1.3
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go ^1.11
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.11
+      - uses: actions/checkout@v2
+      - name: Installer linter (golangci)
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v${GOLANGCI_LINT_VERSION}
+        env:
+          GOLANGCI_LINT_VERSION: '1.33.0'
+      - name: Get dependencies
+        run: go mod vendor
+        env:
+          GO111MODULE: 'on'
+      - name: Test
+        run: make test
+      - name: Lint
+        run: make lint
+      - name: Build
+        run: |
+          curl -sL https://git.io/goreleaser | head -n -2 | bash
+          tar -xf /tmp/goreleaser.tar.gz -C $(go env GOPATH)/bin
+          goreleaser --skip-sign
