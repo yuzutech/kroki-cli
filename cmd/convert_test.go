@@ -92,6 +92,10 @@ func TestGraphFormatFromFile(t *testing.T) {
 			filePath:    "hello.c4",
 			expected:    kroki.C4PlantUML,
 		},
+		{
+			filePath:    "hello.wavedrom",
+			expected:    kroki.WaveDrom,
+		},
 	}
 	for _, c := range cases {
 
