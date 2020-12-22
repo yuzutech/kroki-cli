@@ -1,6 +1,6 @@
 = Kroki CLI
 
-image:https://travis-ci.org/yuzutech/kroki-cli.svg?branch=master[Build Status,link=https://travis-ci.org/yuzutech/kroki-cli]
+image:https://github.com/yuzutech/kroki-cli/workflows/CI/badge.svg[Build Status,link=https://github.com/yuzutech/kroki-cli/actions?query=workflow%3ACI]
 
 A CLI for https://kroki.io.
 
