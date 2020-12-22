@@ -23,6 +23,13 @@ var convertCmd = &cobra.Command{
 	Run:   Convert,
 }
 
+var encodeCmd = &cobra.Command{
+	Use:   "encode file",
+	Short: "Encode text diagram in deflate + base64 format",
+	Args:  cobra.ExactArgs(1),
+	Run:   Encode,
+}
+
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version of kroki",
@@ -48,6 +55,7 @@ func init() {
 	convertCmd.PersistentFlags().StringP("out-file", "o", "", "output file (default: based on path of input file); use - to output to STDOUT")
 	RootCmd.AddCommand(versionCmd)
 	RootCmd.AddCommand(convertCmd)
+	RootCmd.AddCommand(encodeCmd)
 
 	SetupConfig()
 
