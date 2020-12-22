@@ -246,7 +246,7 @@ func GraphFormatFromFile(filePath string) (kroki.DiagramType, error) {
 		return kroki.Vega, nil
 	case ".vegalite", ".vgl", ".vl":
 		return kroki.VegaLite, nil
-	case "wavedrom":
+	case ".wavedrom":
 		return kroki.WaveDrom, nil
 	default:
 		return kroki.DiagramType(""), errors.Errorf(
