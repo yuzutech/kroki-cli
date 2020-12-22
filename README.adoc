@@ -8,7 +8,7 @@ A CLI for https://kroki.io.
 
  kroki convert hello.dot
 
-By default the diagram type will be inferred from the diagram file extension and the default output format will be `SVG`.
+By default, the diagram type will be inferred from the diagram file extension and the default output format will be `SVG`.
 
 Long format:
 
@@ -22,7 +22,7 @@ Read from `stdin`:
 
  cat hello.dot | kroki convert - -t dot
 
-By default when reading from `stdin` using `-`, the result will be output to `stdout`.
+By default, when reading from `stdin` using `-`, the result will be output to `stdout`.
 If you want to output to a file you can use `-o`:
 
  cat hello.dot | kroki convert - -t dot -o out.png
@@ -45,7 +45,7 @@ You can also specify an alternate config file using the `--config` flag:
  kroki convert hello.dot --config config.yml
 
 The config file should contain the endpoint URL and the HTTP timeout.
-By default Kroki will use the demonstration server: https://demo.kroki.io and a timeout of 20 seconds.
+By default, Kroki will use the demonstration server: https://demo.kroki.io and a timeout of 20 seconds.
 
 CAUTION: Please note that the demonstration server usage is restricted to reasonable, non-commercial use-cases.
 We provide no guarantee regarding uptime or latency.
