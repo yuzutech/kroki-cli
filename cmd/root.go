@@ -30,6 +30,13 @@ var encodeCmd = &cobra.Command{
 	Run:   Encode,
 }
 
+var decodeCmd = &cobra.Command{
+	Use:   "decode input",
+	Short: "Decode an encoded (deflate + base64) diagram",
+	Args:  cobra.ExactArgs(1),
+	Run:   Decode,
+}
+
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version of kroki",
@@ -56,6 +63,7 @@ func init() {
 	RootCmd.AddCommand(versionCmd)
 	RootCmd.AddCommand(convertCmd)
 	RootCmd.AddCommand(encodeCmd)
+	RootCmd.AddCommand(decodeCmd)
 
 	SetupConfig()
 
