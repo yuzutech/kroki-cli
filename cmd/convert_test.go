@@ -178,7 +178,7 @@ func TestConvertFromReader(t *testing.T) {
 		if diagramType != "graphviz" {
 			t.Errorf("ConvertFromReader error\nexpected: %s\nactual:   %s", "graphviz", diagramType)
 		}
-		w.Write([]byte("<svg>Hello</svg>"))
+		_, _ = w.Write([]byte("<svg>Hello</svg>"))
 	}))
 	defer ts.Close()
 	port, err := strconv.ParseUint(strings.Split(ts.URL, ":")[2], 10, 16)
@@ -216,7 +216,7 @@ func TestConvertFromReaderOutFile(t *testing.T) {
 		if diagramType != "graphviz" {
 			t.Errorf("ConvertFromReaderOutFile error\nexpected: %s\nactual:   %s", "graphviz", diagramType)
 		}
-		w.Write([]byte("<svg>Hello</svg>"))
+		_, _ = w.Write([]byte("<svg>Hello</svg>"))
 	}))
 	defer ts.Close()
 	port, err := strconv.ParseUint(strings.Split(ts.URL, ":")[2], 10, 16)
@@ -232,7 +232,7 @@ func TestConvertFromReaderOutFile(t *testing.T) {
 	outFilePath := "../tests/out.ignore.test.svg"
 	defer os.Remove(outFilePath)
 	ConvertFromReader(client, "dot", "", outFilePath, buf)
-	result, err := ioutil.ReadFile(outFilePath)
+	result, _ := ioutil.ReadFile(outFilePath)
 	expected := "<svg>Hello</svg>"
 	if string(result) != expected {
 		t.Errorf("ConvertFromReaderOutFile error\nexpected: %s\nactual:   %s", expected, string(result))
@@ -260,11 +260,11 @@ func CaptureOutput(f func()) string {
 	go func() {
 		var buf bytes.Buffer
 		wg.Done()
-		io.Copy(&buf, reader)
+		_, _ = io.Copy(&buf, reader)
 		out <- buf.String()
 	}()
 	wg.Wait()
 	f()
-	writer.Close()
+	_ = writer.Close()
 	return <-out
 }
