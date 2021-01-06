@@ -96,6 +96,18 @@ func TestGraphFormatFromFile(t *testing.T) {
 			filePath:    "hello.wavedrom",
 			expected:    kroki.WaveDrom,
 		},
+		{
+			filePath:    "hello.bpmn",
+			expected:    kroki.BPMN,
+		},
+		{
+			filePath:    "hello.excalidraw",
+			expected:    kroki.Excalidraw,
+		},
+		{
+			filePath:    "hello.bytefield",
+			expected:    kroki.Bytefield,
+		},
 	}
 	for _, c := range cases {
 

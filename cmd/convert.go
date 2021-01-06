@@ -212,36 +212,42 @@ func GraphFormatFromFile(filePath string) (kroki.DiagramType, error) {
 	fileExtension := filepath.Ext(filePath)
 	value := strings.ToLower(fileExtension)
 	switch value {
-	case ".dot", ".gv", ".graphviz":
-		return kroki.GraphViz, nil
-	case ".puml", ".plantuml":
-		return kroki.PlantUML, nil
-	case ".nomnoml":
-		return kroki.Nomnoml, nil
+	case ".actdiag":
+		return kroki.ActDiag, nil
 	case ".blockdiag":
 		return kroki.BlockDiag, nil
+	case ".bpmn":
+		return kroki.BPMN, nil
+	case ".bytefield":
+		return kroki.Bytefield, nil
+	case ".c4puml", ".c4", ".c4plantuml":
+		return kroki.C4PlantUML, nil
+	case ".ditaa":
+		return kroki.Ditaa, nil
+	case ".erd", ".er":
+		return kroki.Erd, nil
+	case ".excalidraw":
+		return kroki.Excalidraw, nil
+	case ".dot", ".gv", ".graphviz":
+		return kroki.GraphViz, nil
 	case ".mermaid":
 		return kroki.Mermaid, nil
+	case ".nomnoml":
+		return kroki.Nomnoml, nil
+	case ".nwdiag":
+		return kroki.NwDiag, nil
+	case ".packetdiag":
+		return kroki.PacketDiag, nil
+	case ".puml", ".plantuml":
+		return kroki.PlantUML, nil
+	case ".rackdiag":
+		return kroki.RackDiag, nil
+	case ".seqdiag":
+		return kroki.SeqDiag, nil
 	case ".svgbob":
 		return kroki.Svgbob, nil
 	case ".umlet":
 		return kroki.UMlet, nil
-	case ".c4puml", ".c4", ".c4plantuml":
-		return kroki.C4PlantUML, nil
-	case ".seqdiag":
-		return kroki.SeqDiag, nil
-	case ".erd", ".er":
-		return kroki.Erd, nil
-	case ".nwdiag":
-		return kroki.NwDiag, nil
-	case ".actdiag":
-		return kroki.ActDiag, nil
-	case ".ditaa":
-		return kroki.Ditaa, nil
-	case ".rackdiag":
-		return kroki.RackDiag, nil
-	case ".packetdiag":
-		return kroki.PacketDiag, nil
 	case ".vega", ".vg":
 		return kroki.Vega, nil
 	case ".vegalite", ".vgl", ".vl":
