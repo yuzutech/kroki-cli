@@ -16,64 +16,72 @@ import (
 	"github.com/yuzutech/kroki-go"
 )
 
-var (
-
-	// SupportedImageFormats maps string names back to their
-	// kroki.ImageFormat constant value.
-	SupportedImageFormats = []kroki.ImageFormat{
+// getSupportedImageFormats returns the list of all the supported image formats
+// Please note that not all image formats are available on all diagram types
+func getSupportedImageFormats() []kroki.ImageFormat {
+	return []kroki.ImageFormat{
 		kroki.SVG,
 		kroki.PNG,
 		kroki.JPEG,
 		kroki.PDF,
 		kroki.Base64,
 	}
+}
 
-	// SupportedDiagramTypes maps string names back to the
-	// corresponding kroki.DiagramType constant.
-	SupportedDiagramTypes = []kroki.DiagramType{
-		kroki.GraphViz,
-		kroki.PlantUML,
-		kroki.Nomnoml,
+// getSupportedDiagramTypes returns the list of all supported diagram types
+func getSupportedDiagramTypes() []kroki.DiagramType {
+	return []kroki.DiagramType{
+		kroki.ActDiag,
 		kroki.BlockDiag,
+		kroki.BPMN,
+		kroki.Bytefield,
+		kroki.C4PlantUML,
+		kroki.Ditaa,
+		kroki.Erd,
+		kroki.Excalidraw,
+		kroki.GraphViz,
 		kroki.Mermaid,
+		kroki.Nomnoml,
+		kroki.NwDiag,
+		kroki.PacketDiag,
+		kroki.PlantUML,
+		kroki.RackDiag,
+		kroki.SeqDiag,
 		kroki.Svgbob,
 		kroki.UMlet,
-		kroki.C4PlantUML,
-		kroki.SeqDiag,
-		kroki.Erd,
-		kroki.NwDiag,
-		kroki.ActDiag,
-		kroki.Ditaa,
-		kroki.RackDiag,
 		kroki.Vega,
 		kroki.VegaLite,
 		kroki.WaveDrom,
 	}
+}
 
-	// The mappings are pre-populated with some Additional
-	// forms that are matched/accepted for certain types.
-	// The init() function will flesh them out with a set of
-	// standard names based on the two Supported* slices.
-
-	// Valid --format arguments for output file type
-	ImageFormatNames = map[string]kroki.ImageFormat{
-		"jpg": kroki.JPEG,
-	}
-
-	// File extensions matched to derive output file type
-	ImageFormatExtensions = map[string]kroki.ImageFormat{
+// getImageFormatExtensions returns a map of file extensions (including '.') with their corresponding image format
+func getImageFormatExtensions() map[string]kroki.ImageFormat {
+	imageFormatExtensions := map[string]kroki.ImageFormat{
 		".jpg": kroki.JPEG,
 	}
-
-	// Valid --type arguments for input file type
-	DiagramTypeNames = map[string]kroki.DiagramType{
-		"dot":    kroki.GraphViz,
-		"er":     kroki.Erd,
-		"nwdiag": kroki.NwDiag,
+	supportedImageFormats := getSupportedImageFormats()
+	for _, v := range supportedImageFormats {
+		imageFormatExtensions["."+string(v)] = v
 	}
+	return imageFormatExtensions
+}
 
-	// Filename matching for input file type
-	DiagramTypeExtensions = map[string]kroki.DiagramType{
+// getDiagramTypeNames returns a map of diagram names with their corresponding diagram type
+func getDiagramTypeNames() map[string]kroki.DiagramType{
+	diagramTypeNames := map[string]kroki.DiagramType{
+		"dot":    kroki.GraphViz,
+	}
+	supportedDiagramTypes := getSupportedDiagramTypes()
+	for _, v := range supportedDiagramTypes {
+		diagramTypeNames[string(v)] = v
+	}
+	return diagramTypeNames
+}
+
+// getDiagramTypeExtensions returns a map of diagram file extensions (including '.') with their corresponding diagram type
+func getDiagramTypeExtensions() map[string]kroki.DiagramType {
+	diagramTypeExtensions := map[string]kroki.DiagramType{
 		".dot":    kroki.GraphViz,
 		".gv":     kroki.GraphViz,
 		".puml":   kroki.PlantUML,
@@ -84,7 +92,12 @@ var (
 		".vgl":    kroki.VegaLite,
 		".vl":     kroki.VegaLite,
 	}
-)
+	supportedDiagramTypes := getSupportedDiagramTypes()
+	for _, v := range supportedDiagramTypes {
+		diagramTypeExtensions["."+string(v)] = v
+	}
+	return diagramTypeExtensions
+}
 
 func Convert(cmd *cobra.Command, args []string) {
 	filePath := args[0]
@@ -187,10 +200,10 @@ func ResolveImageFormat(imageFormatRaw string, outFile string) (kroki.ImageForma
 
 func ImageFormatFromValue(imageFormatRaw string) (kroki.ImageFormat, error) {
 	value := strings.ToLower(imageFormatRaw)
-	if f, ok := ImageFormatNames[value]; ok {
+	if f, ok := getImageFormatExtensions()["."+value]; ok {
 		return f, nil
 	}
-	return kroki.ImageFormat(""), errors.Errorf(
+	return "", errors.Errorf(
 		"invalid image format %s.",
 		value)
 }
@@ -198,10 +211,10 @@ func ImageFormatFromValue(imageFormatRaw string) (kroki.ImageFormat, error) {
 func ImageFormatFromFile(filePath string) (kroki.ImageFormat, error) {
 	fileExtension := filepath.Ext(filePath)
 	value := strings.ToLower(fileExtension)
-	if f, ok := ImageFormatExtensions[value]; ok {
+	if f, ok := getImageFormatExtensions()[value]; ok {
 		return f, nil
 	}
-	return kroki.ImageFormat(""), errors.Errorf(
+	return "", errors.Errorf(
 		"invalid image format %s.",
 		value)
 }
@@ -216,10 +229,10 @@ func ResolveGraphFormat(graphFormatRaw string, filePath string) (kroki.DiagramTy
 
 func GraphFormatFromValue(value string) (kroki.DiagramType, error) {
 	value = strings.ToLower(value)
-	if d, ok := DiagramTypeNames[value]; ok {
+	if d, ok := getDiagramTypeNames()[value]; ok {
 		return d, nil
 	}
-	return kroki.DiagramType(""), errors.Errorf(
+	return "", errors.Errorf(
 		"invalid graph format %s.",
 		value)
 }
@@ -227,10 +240,10 @@ func GraphFormatFromValue(value string) (kroki.DiagramType, error) {
 func GraphFormatFromFile(filePath string) (kroki.DiagramType, error) {
 	fileExtension := filepath.Ext(filePath)
 	value := strings.ToLower(fileExtension)
-	if d, ok := DiagramTypeExtensions[fileExtension]; ok {
+	if d, ok := getDiagramTypeExtensions()[fileExtension]; ok {
 		return d, nil
 	}
-	return kroki.DiagramType(""), errors.Errorf(
+	return "", errors.Errorf(
 		"unable to infer the graph format from the file extension %s, please specify the diagram type using --type flag.",
 		value)
 }
@@ -254,16 +267,4 @@ func GetClient(cmd *cobra.Command) kroki.Client {
 		URL:     viper.GetString("endpoint"),
 		Timeout: viper.GetDuration("timeout"),
 	})
-}
-
-// Set up mappings
-func init() {
-	for _, v := range SupportedDiagramTypes {
-		DiagramTypeNames[string(v)] = v
-		DiagramTypeExtensions["."+string(v)] = v
-	}
-	for _, v := range SupportedImageFormats {
-		ImageFormatNames[string(v)] = v
-		ImageFormatExtensions["."+string(v)] = v
-	}
 }

@@ -57,13 +57,15 @@ func Execute(version, commit string) {
 }
 
 func init() {
-	diagramTypeNames := make([]string, len(SupportedDiagramTypes))
-	imageFormatNames := make([]string, len(SupportedImageFormats))
-	for i, v := range SupportedDiagramTypes {
+	supportedDiagramTypes := getSupportedDiagramTypes()
+	supportedImageFormats := getSupportedImageFormats()
+	diagramTypeNames := make([]string, len(supportedDiagramTypes))
+	imageFormatNames := make([]string, len(supportedImageFormats))
+	for i, v := range supportedDiagramTypes {
 		diagramTypeNames[i] = string(v)
 	}
 	sort.Strings(diagramTypeNames)
-	for i, v := range SupportedImageFormats {
+	for i, v := range supportedImageFormats {
 		imageFormatNames[i] = string(v)
 	}
 	sort.Strings(imageFormatNames)
