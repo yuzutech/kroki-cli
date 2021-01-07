@@ -16,6 +16,50 @@ import (
 	"github.com/yuzutech/kroki-go"
 )
 
+// getImageFormatExtensions returns a map of file extensions (including '.') with their corresponding image format
+func getImageFormatExtensions() map[string]kroki.ImageFormat {
+	imageFormatExtensions := map[string]kroki.ImageFormat{
+		".jpg": kroki.JPEG,
+	}
+	supportedImageFormats := kroki.GetSupportedImageFormats()
+	for _, v := range supportedImageFormats {
+		imageFormatExtensions["."+string(v)] = v
+	}
+	return imageFormatExtensions
+}
+
+// getDiagramTypeNames returns a map of diagram names with their corresponding diagram type
+func getDiagramTypeNames() map[string]kroki.DiagramType{
+	diagramTypeNames := map[string]kroki.DiagramType{
+		"dot":    kroki.GraphViz,
+	}
+	supportedDiagramTypes := kroki.GetSupportedDiagramTypes()
+	for _, v := range supportedDiagramTypes {
+		diagramTypeNames[string(v)] = v
+	}
+	return diagramTypeNames
+}
+
+// getDiagramTypeExtensions returns a map of diagram file extensions (including '.') with their corresponding diagram type
+func getDiagramTypeExtensions() map[string]kroki.DiagramType {
+	diagramTypeExtensions := map[string]kroki.DiagramType{
+		".dot":    kroki.GraphViz,
+		".gv":     kroki.GraphViz,
+		".puml":   kroki.PlantUML,
+		".c4puml": kroki.C4PlantUML,
+		".c4":     kroki.C4PlantUML,
+		".er":     kroki.Erd,
+		".vg":     kroki.Vega,
+		".vgl":    kroki.VegaLite,
+		".vl":     kroki.VegaLite,
+	}
+	supportedDiagramTypes := kroki.GetSupportedDiagramTypes()
+	for _, v := range supportedDiagramTypes {
+		diagramTypeExtensions["."+string(v)] = v
+	}
+	return diagramTypeExtensions
+}
+
 func Convert(cmd *cobra.Command, args []string) {
 	filePath := args[0]
 	graphFormat, err := cmd.Flags().GetString("type")
@@ -117,41 +161,23 @@ func ResolveImageFormat(imageFormatRaw string, outFile string) (kroki.ImageForma
 
 func ImageFormatFromValue(imageFormatRaw string) (kroki.ImageFormat, error) {
 	value := strings.ToLower(imageFormatRaw)
-	switch value {
-	case "svg":
-		return kroki.SVG, nil
-	case "png":
-		return kroki.PNG, nil
-	case "jpeg":
-		return kroki.JPEG, nil
-	case "pdf":
-		return kroki.PDF, nil
-	case "base64":
-		return kroki.Base64, nil
-	default:
-		return kroki.ImageFormat(""), errors.Errorf(
-			"invalid image format %s.",
-			value)
+	if f, ok := getImageFormatExtensions()["."+value]; ok {
+		return f, nil
 	}
+	return "", errors.Errorf(
+		"invalid image format %s.",
+		value)
 }
 
 func ImageFormatFromFile(filePath string) (kroki.ImageFormat, error) {
 	fileExtension := filepath.Ext(filePath)
 	value := strings.ToLower(fileExtension)
-	switch value {
-	case ".svg":
-		return kroki.SVG, nil
-	case ".png":
-		return kroki.PNG, nil
-	case ".jpeg", ".jpg":
-		return kroki.JPEG, nil
-	case ".pdf":
-		return kroki.PDF, nil
-	default:
-		return kroki.ImageFormat(""), errors.Errorf(
-			"invalid image format %s.",
-			value)
+	if f, ok := getImageFormatExtensions()[value]; ok {
+		return f, nil
 	}
+	return "", errors.Errorf(
+		"invalid image format %s.",
+		value)
 }
 
 func ResolveGraphFormat(graphFormatRaw string, filePath string) (kroki.DiagramType, error) {
@@ -164,101 +190,23 @@ func ResolveGraphFormat(graphFormatRaw string, filePath string) (kroki.DiagramTy
 
 func GraphFormatFromValue(value string) (kroki.DiagramType, error) {
 	value = strings.ToLower(value)
-	switch value {
-	case "dot", "graphviz":
-		return kroki.GraphViz, nil
-	case "plantuml":
-		return kroki.PlantUML, nil
-	case "nomnoml":
-		return kroki.Nomnoml, nil
-	case "blockdiag":
-		return kroki.BlockDiag, nil
-	case "mermaid":
-		return kroki.Mermaid, nil
-	case "svgbob":
-		return kroki.Svgbob, nil
-	case "umlet":
-		return kroki.UMlet, nil
-	case "c4plantuml":
-		return kroki.C4PlantUML, nil
-	case "seqdiag":
-		return kroki.SeqDiag, nil
-	case "erd", "er":
-		return kroki.Erd, nil
-	case "nwdiag":
-		return kroki.NwDiag, nil
-	case "actdiag":
-		return kroki.ActDiag, nil
-	case "ditaa":
-		return kroki.Ditaa, nil
-	case "rackdiag":
-		return kroki.RackDiag, nil
-	case "packetdiag":
-		return kroki.PacketDiag, nil
-	case "vega":
-		return kroki.Vega, nil
-	case "vegalite":
-		return kroki.VegaLite, nil
-	case "wavedrom":
-		return kroki.WaveDrom, nil
-	default:
-		return kroki.DiagramType(""), errors.Errorf(
-			"invalid graph format %s.",
-			value)
+	if d, ok := getDiagramTypeNames()[value]; ok {
+		return d, nil
 	}
+	return "", errors.Errorf(
+		"invalid graph format %s.",
+		value)
 }
 
 func GraphFormatFromFile(filePath string) (kroki.DiagramType, error) {
 	fileExtension := filepath.Ext(filePath)
 	value := strings.ToLower(fileExtension)
-	switch value {
-	case ".actdiag":
-		return kroki.ActDiag, nil
-	case ".blockdiag":
-		return kroki.BlockDiag, nil
-	case ".bpmn":
-		return kroki.BPMN, nil
-	case ".bytefield":
-		return kroki.Bytefield, nil
-	case ".c4puml", ".c4", ".c4plantuml":
-		return kroki.C4PlantUML, nil
-	case ".ditaa":
-		return kroki.Ditaa, nil
-	case ".erd", ".er":
-		return kroki.Erd, nil
-	case ".excalidraw":
-		return kroki.Excalidraw, nil
-	case ".dot", ".gv", ".graphviz":
-		return kroki.GraphViz, nil
-	case ".mermaid":
-		return kroki.Mermaid, nil
-	case ".nomnoml":
-		return kroki.Nomnoml, nil
-	case ".nwdiag":
-		return kroki.NwDiag, nil
-	case ".packetdiag":
-		return kroki.PacketDiag, nil
-	case ".puml", ".plantuml":
-		return kroki.PlantUML, nil
-	case ".rackdiag":
-		return kroki.RackDiag, nil
-	case ".seqdiag":
-		return kroki.SeqDiag, nil
-	case ".svgbob":
-		return kroki.Svgbob, nil
-	case ".umlet":
-		return kroki.UMlet, nil
-	case ".vega", ".vg":
-		return kroki.Vega, nil
-	case ".vegalite", ".vgl", ".vl":
-		return kroki.VegaLite, nil
-	case ".wavedrom":
-		return kroki.WaveDrom, nil
-	default:
-		return kroki.DiagramType(""), errors.Errorf(
-			"unable to infer the graph format from the file extension %s, please specify the diagram type using --type flag.",
-			value)
+	if d, ok := getDiagramTypeExtensions()[fileExtension]; ok {
+		return d, nil
 	}
+	return "", errors.Errorf(
+		"unable to infer the graph format from the file extension %s, please specify the diagram type using --type flag.",
+		value)
 }
 
 func GetClient(cmd *cobra.Command) kroki.Client {

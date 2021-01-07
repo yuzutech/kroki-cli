@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/yuzutech/kroki-go"
+	"sort"
 
 	"github.com/spf13/cobra"
 )
@@ -56,9 +58,25 @@ func Execute(version, commit string) {
 }
 
 func init() {
+	supportedDiagramTypes := kroki.GetSupportedDiagramTypes()
+	supportedImageFormats := kroki.GetSupportedImageFormats()
+	diagramTypeNames := make([]string, len(supportedDiagramTypes))
+	imageFormatNames := make([]string, len(supportedImageFormats))
+	for i, v := range supportedDiagramTypes {
+		diagramTypeNames[i] = string(v)
+	}
+	sort.Strings(diagramTypeNames)
+	for i, v := range supportedImageFormats {
+		imageFormatNames[i] = string(v)
+	}
+	sort.Strings(imageFormatNames)
+
+	typeHelp := fmt.Sprintf("diagram type %s (default: infer from file extension)", diagramTypeNames)
+	formatHelp := fmt.Sprintf("output format %s (default: infer from output file extension otherwise svg)", imageFormatNames)
+
 	convertCmd.PersistentFlags().StringP("config", "c", "", "alternate config file [env KROKI_CONFIG]")
-	convertCmd.PersistentFlags().StringP("type", "t", "", "diagram type [actdiag, blockdiag, c4plantuml, ditaa, dot, erd, graphviz, nomnoml, nwdiag, plantuml, seqdiag, svgbob, umlet] (default: infer from file extension)")
-	convertCmd.PersistentFlags().StringP("format", "f", "", "output format (default: infer from output file extension otherwise svg)")
+	convertCmd.PersistentFlags().StringP("type", "t", "", typeHelp)
+	convertCmd.PersistentFlags().StringP("format", "f", "", formatHelp)
 	convertCmd.PersistentFlags().StringP("out-file", "o", "", "output file (default: based on path of input file); use - to output to STDOUT")
 	RootCmd.AddCommand(versionCmd)
 	RootCmd.AddCommand(convertCmd)
