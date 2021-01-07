@@ -16,51 +16,12 @@ import (
 	"github.com/yuzutech/kroki-go"
 )
 
-// getSupportedImageFormats returns the list of all the supported image formats
-// Please note that not all image formats are available on all diagram types
-func getSupportedImageFormats() []kroki.ImageFormat {
-	return []kroki.ImageFormat{
-		kroki.SVG,
-		kroki.PNG,
-		kroki.JPEG,
-		kroki.PDF,
-		kroki.Base64,
-	}
-}
-
-// getSupportedDiagramTypes returns the list of all supported diagram types
-func getSupportedDiagramTypes() []kroki.DiagramType {
-	return []kroki.DiagramType{
-		kroki.ActDiag,
-		kroki.BlockDiag,
-		kroki.BPMN,
-		kroki.Bytefield,
-		kroki.C4PlantUML,
-		kroki.Ditaa,
-		kroki.Erd,
-		kroki.Excalidraw,
-		kroki.GraphViz,
-		kroki.Mermaid,
-		kroki.Nomnoml,
-		kroki.NwDiag,
-		kroki.PacketDiag,
-		kroki.PlantUML,
-		kroki.RackDiag,
-		kroki.SeqDiag,
-		kroki.Svgbob,
-		kroki.UMlet,
-		kroki.Vega,
-		kroki.VegaLite,
-		kroki.WaveDrom,
-	}
-}
-
 // getImageFormatExtensions returns a map of file extensions (including '.') with their corresponding image format
 func getImageFormatExtensions() map[string]kroki.ImageFormat {
 	imageFormatExtensions := map[string]kroki.ImageFormat{
 		".jpg": kroki.JPEG,
 	}
-	supportedImageFormats := getSupportedImageFormats()
+	supportedImageFormats := kroki.GetSupportedImageFormats()
 	for _, v := range supportedImageFormats {
 		imageFormatExtensions["."+string(v)] = v
 	}
@@ -72,7 +33,7 @@ func getDiagramTypeNames() map[string]kroki.DiagramType{
 	diagramTypeNames := map[string]kroki.DiagramType{
 		"dot":    kroki.GraphViz,
 	}
-	supportedDiagramTypes := getSupportedDiagramTypes()
+	supportedDiagramTypes := kroki.GetSupportedDiagramTypes()
 	for _, v := range supportedDiagramTypes {
 		diagramTypeNames[string(v)] = v
 	}
@@ -92,7 +53,7 @@ func getDiagramTypeExtensions() map[string]kroki.DiagramType {
 		".vgl":    kroki.VegaLite,
 		".vl":     kroki.VegaLite,
 	}
-	supportedDiagramTypes := getSupportedDiagramTypes()
+	supportedDiagramTypes := kroki.GetSupportedDiagramTypes()
 	for _, v := range supportedDiagramTypes {
 		diagramTypeExtensions["."+string(v)] = v
 	}

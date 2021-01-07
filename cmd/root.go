@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/yuzutech/kroki-go"
 	"sort"
 
 	"github.com/spf13/cobra"
@@ -57,8 +58,8 @@ func Execute(version, commit string) {
 }
 
 func init() {
-	supportedDiagramTypes := getSupportedDiagramTypes()
-	supportedImageFormats := getSupportedImageFormats()
+	supportedDiagramTypes := kroki.GetSupportedDiagramTypes()
+	supportedImageFormats := kroki.GetSupportedImageFormats()
 	diagramTypeNames := make([]string, len(supportedDiagramTypes))
 	imageFormatNames := make([]string, len(supportedImageFormats))
 	for i, v := range supportedDiagramTypes {
