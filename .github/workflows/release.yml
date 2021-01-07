@@ -33,3 +33,5 @@ jobs:
           curl -sL https://git.io/goreleaser | head -n -2 | bash
           tar -xf /tmp/goreleaser.tar.gz -C $(go env GOPATH)/bin
           goreleaser --skip-sign
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
