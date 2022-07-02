@@ -193,9 +193,8 @@ func GraphFormatFromValue(value string) (kroki.DiagramType, error) {
 	if d, ok := getDiagramTypeNames()[value]; ok {
 		return d, nil
 	}
-	return "", errors.Errorf(
-		"invalid graph format %s.",
-		value)
+	// support unrecognized type
+	return kroki.DiagramType(value), nil
 }
 
 func GraphFormatFromFile(filePath string) (kroki.DiagramType, error) {
