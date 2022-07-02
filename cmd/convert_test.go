@@ -178,6 +178,32 @@ func TestResolveImageFormat(t *testing.T) {
 	}
 }
 
+func TestGraphFormatFromValue(t *testing.T) {
+	cases := []struct {
+		diagramTypeRaw string
+		expected       kroki.DiagramType
+	}{
+		{
+			diagramTypeRaw: "VegaLite",
+			expected:       kroki.VegaLite,
+		},
+		{
+			diagramTypeRaw: "diagramsnet",
+			expected:       kroki.DiagramType("diagramsnet"),
+		},
+		{
+			diagramTypeRaw: "Structurizr",
+			expected:       kroki.DiagramType("structurizr"),
+		},
+	}
+	for _, c := range cases {
+		result, _ := GraphFormatFromValue(c.diagramTypeRaw)
+		if result != c.expected {
+			t.Errorf("GraphFormatFromValue error\nexpected: %s\nactual:   %s", c.expected, result)
+		}
+	}
+}
+
 func TestConvertFromReader(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		expected := "eNpKyUwvSizIUHBXqPZIzcnJ17ULzy_KSakFBAAA__9sQAjG"
