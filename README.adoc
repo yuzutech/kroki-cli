@@ -31,6 +31,16 @@ Similarly, you can also output to `stdout` when reading from a file using the sp
 
  kroki convert simple.er --out-file -
 
+== Installation
+
+The https://github.com/yuzutech/kroki-cli/releases[releases page] provides binaries for each version to download.
+
+You can also install the package directly from source. The compiled binary will be put into `$GOPATH/bin/` or `$HOME/go/bin/` if `$GOPATH` is not set:
+
+```bash
+go install github.com/yuzutech/kroki-cli/cmd/kroki@latest
+```
+
 == Configuration
 
 To configure the endpoint, you can use a configuration file.

@@ -9,6 +9,7 @@ builds:
     env:
       - CGO_ENABLED=0
     binary: kroki
+    main: ./cmd/kroki/
     goos:
       - windows
       - darwin

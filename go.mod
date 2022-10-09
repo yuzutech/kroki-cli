@@ -1,4 +1,4 @@
-module kroki
+module github.com/yuzutech/kroki-cli
 
 go 1.18
 
