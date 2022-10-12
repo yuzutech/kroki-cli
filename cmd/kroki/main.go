@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"kroki/cmd"
+	"github.com/yuzutech/kroki-cli/pkg"
 )
 
 var (
@@ -15,5 +15,5 @@ var (
 
 func main() {
 	log.SetFlags(0)
-	cmd.Execute(version, commit)
+	pkg.Execute(version, commit)
 }

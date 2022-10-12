@@ -1,4 +1,4 @@
-package cmd
+package pkg
 
 import "github.com/spf13/viper"
 
