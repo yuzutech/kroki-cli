@@ -12,7 +12,6 @@ import (
 	"path"
 	"strings"
 
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -59,11 +58,11 @@ func DecodeInput(input string) (string, error) {
 	}
 	result, err := base64.URLEncoding.DecodeString(input)
 	if err != nil {
-		return "", errors.Wrap(err, "fail to decode the input")
+		return "", fmt.Errorf("fail to decode the input: %w", err)
 	}
 	reader, err := zlib.NewReader(bytes.NewReader(result))
 	if err != nil {
-		return "", errors.Wrap(err, "fail to create the reader")
+		return "", fmt.Errorf("fail to create the reader: %w", err)
 	}
 	out := new(strings.Builder)
 	_, _ = io.Copy(out, reader)
@@ -78,7 +77,7 @@ func getUrl(input string) (*url.URL, error) {
 
 	u, err := url.Parse(input)
 	if err != nil || u.Scheme == "" || u.Host == "" {
-		return u, errors.New("invalid URL")
+		return u, fmt.Errorf("invalid URL")
 	}
 
 	return u, nil

@@ -4,10 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/yuzutech/kroki-go"
 )
@@ -35,9 +33,9 @@ func EncodeFromReader(reader io.Reader) {
 }
 
 func EncodeFromFile(filePath string) {
-	content, err := ioutil.ReadFile(filePath)
+	content, err := os.ReadFile(filePath)
 	if err != nil {
-		exit(errors.Wrapf(err, "fail to read file '%s'", filePath))
+		exit(fmt.Errorf("fail to read file %s: %w", filePath, err))
 	}
 	input := string(content)
 	result, err := kroki.CreatePayload(input)

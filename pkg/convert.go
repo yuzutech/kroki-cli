@@ -9,7 +9,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/yuzutech/kroki-go"
@@ -164,9 +163,7 @@ func ImageFormatFromValue(imageFormatRaw string) (kroki.ImageFormat, error) {
 	if f, ok := getImageFormatExtensions()["."+value]; ok {
 		return f, nil
 	}
-	return "", errors.Errorf(
-		"invalid image format %s.",
-		value)
+	return "", fmt.Errorf("invalid image format: %s", value)
 }
 
 func ImageFormatFromFile(filePath string) (kroki.ImageFormat, error) {
@@ -175,9 +172,7 @@ func ImageFormatFromFile(filePath string) (kroki.ImageFormat, error) {
 	if f, ok := getImageFormatExtensions()[value]; ok {
 		return f, nil
 	}
-	return "", errors.Errorf(
-		"invalid image format %s.",
-		value)
+	return "", fmt.Errorf("invalid image format: %s", value)
 }
 
 func ResolveGraphFormat(graphFormatRaw string, filePath string) (kroki.DiagramType, error) {
@@ -203,8 +198,8 @@ func GraphFormatFromFile(filePath string) (kroki.DiagramType, error) {
 	if d, ok := getDiagramTypeExtensions()[fileExtension]; ok {
 		return d, nil
 	}
-	return "", errors.Errorf(
-		"unable to infer the graph format from the file extension %s, please specify the diagram type using --type flag.",
+	return "", fmt.Errorf(
+		"unable to infer the graph format from the file extension %s, please specify the diagram type using --type flag",
 		value)
 }
 
