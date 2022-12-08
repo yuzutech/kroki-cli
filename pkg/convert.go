@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -29,9 +28,9 @@ func getImageFormatExtensions() map[string]kroki.ImageFormat {
 }
 
 // getDiagramTypeNames returns a map of diagram names with their corresponding diagram type
-func getDiagramTypeNames() map[string]kroki.DiagramType{
+func getDiagramTypeNames() map[string]kroki.DiagramType {
 	diagramTypeNames := map[string]kroki.DiagramType{
-		"dot":    kroki.GraphViz,
+		"dot": kroki.GraphViz,
 	}
 	supportedDiagramTypes := kroki.GetSupportedDiagramTypes()
 	for _, v := range supportedDiagramTypes {
@@ -43,6 +42,7 @@ func getDiagramTypeNames() map[string]kroki.DiagramType{
 // getDiagramTypeExtensions returns a map of diagram file extensions (including '.') with their corresponding diagram type
 func getDiagramTypeExtensions() map[string]kroki.DiagramType {
 	diagramTypeExtensions := map[string]kroki.DiagramType{
+		".d2":     kroki.D2,
 		".dot":    kroki.GraphViz,
 		".gv":     kroki.GraphViz,
 		".puml":   kroki.PlantUML,
@@ -114,7 +114,7 @@ func ConvertFromReader(client kroki.Client, diagramTypeRaw string, imageFormatRa
 }
 
 func GetTextFromReader(reader io.Reader) (result string, err error) {
-	input, err := ioutil.ReadAll(reader)
+	input, err := io.ReadAll(reader)
 	return string(input), err
 }
 

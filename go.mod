@@ -6,7 +6,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.6.0
 	github.com/spf13/viper v1.13.0
-	github.com/yuzutech/kroki-go v0.7.0
+	github.com/yuzutech/kroki-go v0.8.1
 )
 
 require (
