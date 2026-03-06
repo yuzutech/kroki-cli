@@ -33,4 +33,4 @@ jobs:
       run: |
         curl -sL https://git.io/goreleaser | head -n -2 | bash
         tar -xf /tmp/goreleaser.tar.gz -C $(go env GOPATH)/bin
-        goreleaser --snapshot --skip-sign
+        goreleaser --snapshot --skip=sign
