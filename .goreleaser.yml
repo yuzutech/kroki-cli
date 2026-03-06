@@ -1,3 +1,5 @@
+version: 2
+
 project_name: kroki-cli
 
 before:
@@ -17,12 +19,13 @@ builds:
       - openbsd
     goarch:
       - amd64
+      - arm64
 
 archives:
   -
     format_overrides:
       - goos: windows
-        format: zip
+        formats: ['zip']
 
 release:
   github:
