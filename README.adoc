@@ -35,7 +35,14 @@ Similarly, you can also output to `stdout` when reading from a file using the sp
 
 The https://github.com/yuzutech/kroki-cli/releases[releases page] provides binaries for each version to download.
 
-You can also install the package directly from source. The compiled binary will be put into `$GOPATH/bin/` or `$HOME/go/bin/` if `$GOPATH` is not set:
+You can also install using https://pixi.prefix.dev/latest/installation/[Pixi]:
+
+[source,bash]
+----
+pixi global install --channel https://prefix.dev/github-releases kroki-cli
+----
+
+Alternatively, you can install the package directly from source. The compiled binary will be put into `$GOPATH/bin/` or `$HOME/go/bin/` if `$GOPATH` is not set:
 
 ```bash
 go install github.com/yuzutech/kroki-cli/cmd/kroki@latest
