@@ -42,7 +42,7 @@ You can also install using https://pixi.prefix.dev/latest/installation/[Pixi]:
 pixi global install --channel https://prefix.dev/github-releases kroki-cli
 ----
 
-You can also install the package directly from source. The compiled binary will be put into `$GOPATH/bin/` or `$HOME/go/bin/` if `$GOPATH` is not set:
+Alternatively, you can install the package directly from source. The compiled binary will be put into `$GOPATH/bin/` or `$HOME/go/bin/` if `$GOPATH` is not set:
 
 ```bash
 go install github.com/yuzutech/kroki-cli/cmd/kroki@latest
